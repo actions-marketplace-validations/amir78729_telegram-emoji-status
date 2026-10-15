@@ -52,7 +52,7 @@ def main() -> None:
 
         try:
             client.start()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"\nAuthentication failed: {e}")
             sys.exit(1)
 
