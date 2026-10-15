@@ -1,0 +1,50 @@
+name: Telegram Emoji Status
+author: Amirhossein Alibakhshi
+description: Update the authenticated Telegram user's custom emoji status
+
+branding:
+  icon: message-circle
+  color: blue
+
+inputs:
+  api_id:
+    description: Telegram API ID
+    required: true
+
+  api_hash:
+    description: Telegram API hash
+    required: true
+
+  session_b64:
+    description: Base64-encoded authenticated Telethon session file
+    required: true
+
+  emoji_id:
+    description: Telegram custom emoji document ID
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      id: setup-python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: pip
+        cache-dependency-path: ${{ github.action_path }}/requirements.txt
+
+    - name: Install dependencies
+      id: install-dependencies
+      shell: bash
+      run: python -m pip install -r "$GITHUB_ACTION_PATH/requirements.txt"
+
+    - name: Update Telegram emoji status
+      id: update-status
+      shell: bash
+      env:
+        TG_API_ID: ${{ inputs.api_id }}
+        TG_API_HASH: ${{ inputs.api_hash }}
+        TG_SESSION_B64: ${{ inputs.session_b64 }}
+        TG_EMOJI_ID: ${{ inputs.emoji_id }}
+      run: python "$GITHUB_ACTION_PATH/update_status.py"
